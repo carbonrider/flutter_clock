@@ -55,6 +55,9 @@ class _ClockState extends State<Clock> {
     double widgetSize = (MediaQuery.of(context).size.width / 5) - 10;
     int hour = (int.parse(_now.hourTens, radix: 2) * 10) +
         int.parse(_now.hourOnes, radix: 2);
+    if(hour > 12) {
+      hour -= 12;
+    }
     return Container(
         padding: EdgeInsets.all(0),
         child: Row(
@@ -177,7 +180,7 @@ class BinaryTime {
 
   BinaryTime() {
     DateTime now = DateTime.now();
-    String hhmmss = DateFormat("jms").format(now).replaceAll(':', '');
+    String hhmmss = DateFormat("Hms").format(now).replaceAll(':', '');
 
     binaryIntegers = hhmmss
         .split('')
