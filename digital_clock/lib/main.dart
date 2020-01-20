@@ -53,13 +53,15 @@ class _ClockState extends State<Clock> {
   @override
   Widget build(BuildContext context) {
     double widgetSize = (MediaQuery.of(context).size.width / 5) - 10;
+    int hour = (int.parse(_now.hourTens, radix: 2) * 10) +
+        int.parse(_now.hourOnes, radix: 2);
     return Container(
         padding: EdgeInsets.all(0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            HourWidget(binaryIntegers: _now.hourOnes, size: widgetSize),
+            HourWidget(hour: hour, size: widgetSize),
             AnimeWidget(binaryInteger: _now.minuteTens, size: widgetSize),
             GridWidget(binaryInteger: _now.minuteOnes, size: widgetSize),
             AnimeWidget(binaryInteger: _now.secondTens, size: widgetSize),
@@ -126,7 +128,7 @@ class GridWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     List<int> timeSlice = dots.elementAt(int.parse(binaryInteger, radix: 2));
     return Container(
-        width: this.size, 
+        width: this.size,
         height: this.size + 20,
         child: AspectRatio(
             aspectRatio: 1,
@@ -175,7 +177,7 @@ class BinaryTime {
 
   BinaryTime() {
     DateTime now = DateTime.now();
-    String hhmmss = DateFormat("Hms").format(now).replaceAll(':', '');
+    String hhmmss = DateFormat("jms").format(now).replaceAll(':', '');
 
     binaryIntegers = hhmmss
         .split('')
@@ -197,16 +199,17 @@ class BinaryTime {
 }
 
 class HourWidget extends StatelessWidget {
-  String binaryIntegers;
+  int hour;
   double size;
 
-  HourWidget({this.binaryIntegers, this.size}) {}
+  HourWidget({this.hour, this.size}) {}
 
   @override
   Widget build(BuildContext context) {
     final GlobalKey<AnimatedCircularChartState> _chartKey =
         new GlobalKey<AnimatedCircularChartState>();
-    double percent = (100 * int.parse(this.binaryIntegers)) / 12;
+
+    double percent = (100 * this.hour) / 12;
     return Container(
       padding: EdgeInsets.all(1.0),
       width: this.size,
